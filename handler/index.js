@@ -21,10 +21,10 @@ module.exports = async (client) => {
     const commandFolderRoot = fs.readdirSync("./commands");
 
     for(const commandFolder of commandFolderRoot){
-        const commandFiles = fs.readdirSync(`./modules/commands/${commandFolder}`).filter((file) => file.endsWith(".js"));
+        const commandFiles = fs.readdirSync(`./commands/${commandFolder}`).filter((file) => file.endsWith(".js"));
 
         for(const commandFile of commandFiles){
-            const command = require(`../modules/commands/${commandFolder}/${commandFile}`);
+            const command = require(`../commands/${commandFolder}/${commandFile}`);
             
             client.commands.set(command.data.name, command);
             commandsArray.push(command.data.toJSON());
