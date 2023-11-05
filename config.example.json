@@ -1,0 +1,53 @@
+{
+  "token": "",
+  "prefix": "", 
+  "target": {
+    "server": "",
+    "owners": []
+  },
+  "modmail": {
+    "category": "",
+    "customMessage": "",
+    "anonymousProfile": ""
+  },
+  "coding_help": {
+    "parentCategory": "",
+    "map": {
+      "languageName": {
+        "roleId": "",
+        "alias": "languageNameAlias"
+      }
+    }
+  },
+  "greeter": {
+    "enable": true,
+    "eventChannel": "677514007241949210",
+    "greetChannel": "868917941184376842",
+    "verificationRole": "661257218188115979",
+    "messages": [
+      "Say hello to {newMember}, everyone!",
+      "Have you brought the :pizza: with you {newMember}?",
+      "Howdy {newMember}, welcome to World of Coding <:WaveNitronix:871812322291748865>",
+      "Some random {newMember} joined the chat <a:CoolBlob:815698306293956670>"
+    ]
+  },
+  "logging": {
+    "joinLeave": "682810173164748840",
+    "modmail": "809849364520370266",
+    "codingHelp": "800151665662623814",
+    "messageUpdate": "682810443617927274",
+    "banUnban": "682810128927424529",
+    "userUpdate": "682811121681432721",
+    "vcUpdate": "682810629936906260",
+    "roleUpdate": "682810748325724169",
+    "reactionRole": "818586911471435806"
+  },
+  "security": {
+    "emergencyRole": "661643830797271070"
+  },
+  "misc": {
+    "marketBlacklistRole": "",
+    "defaultEmbedColor": "BLUE",
+    "suggestionChannel": "727166807773020233"
+  }
+}
