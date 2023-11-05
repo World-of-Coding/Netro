@@ -1,9 +1,14 @@
-module.exports = {
-  name: 'ping',
-  aliases: ['p'],
-  description: 'Get latency between bot and the discord gateway',
+const { SlashCommandBuilder, ChatInputCommandInteraction } = require("discord.js");
 
-  run: async (client, message) => {
-    message.channel.send(`${client.ws.ping} ws ping`);
+module.exports = {
+  data: new SlashCommandBuilder()
+          .setName('ping')
+          .setDescription('Get the latency between the bot and Discord\'s gateway.'),
+
+  /**
+   * @param {ChatInputCommandInteraction} interaction 
+   */
+  async execute(interaction) {
+    await interaction.reply(`${interaction.client.ws.ping}ms`);
   },
 };
