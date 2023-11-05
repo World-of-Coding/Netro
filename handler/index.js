@@ -1,24 +1,12 @@
-const { glob } = require("glob");
-const { promisify } = require("util");
-const { Collection } = require("discord.js");
+const fs = require("fs");
+const client = require("../index.js");
+const ascii = require("ascii-table");
 
-const globPromise = promisify(glob);
-
-/**
- * @param {Client} client
- */
-module.exports = async (client) => {
-    // Events
-    const eventFiles = await globPromise(`${process.cwd()}/events/*.js`);
-    eventFiles.map((value) => {
-        const event = require(value);
-        client.on(event.name, async(...args) => await event.run(...args).catch((e) => client.emit("error", e)));
-    });
-
-    // Slash Commands
+module.exports = async (){
     let commandsArray = [];
     
     const commandFolderRoot = fs.readdirSync("./commands");
+    const eventFolderRoot = fs.readdirSync("./events");
 
     for(const commandFolder of commandFolderRoot){
         const commandFiles = fs.readdirSync(`./commands/${commandFolder}`).filter((file) => file.endsWith(".js"));
@@ -35,4 +23,21 @@ module.exports = async (client) => {
 
     client.application.commands.set(commandsArray);
     console.log("Loaded all commands successfully.");
-};
+
+    const eventTable = new ascii().setHeading("Events", "Working");
+
+    for(const eventFolder of eventFolderRoot){
+
+        const eventFiles = fs.readdirSync(`./events/${eventFolder}`).filter((file) => file.endsWith(".js"));
+
+        for(const event of eventFiles){
+            const masterEvent = require(`../events/${eventFolder}/${event}`);
+
+            client.on(masterEvent.name, (...args) => masterEvent.execute(...args, client) );
+
+            eventTable.addRow(event, "Yes");
+        }
+    }
+
+    console.log(eventTable.toString());
+}
