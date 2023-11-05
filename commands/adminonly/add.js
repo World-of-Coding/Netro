@@ -28,13 +28,7 @@ module.exports = {
 
     const points = interaction.options.getInteger('Points');
 
-    if (isNaN(points) || points === 0) {
-      await interaction.reply({ content: "The points must be an actual number!", ephemeral: true });
-      return;
-    } else if (!points) {
-      await interaction.reply({ content: "You must include an amount of points to add!", ephemeral: true });
-      return;
-    } else if (points < 0) {
+    if (points < 0) {
       await interaction.reply({ content: "You can't add negative amount of points!", ephemeral: true });
       return;
     } else if (points > 100) {

@@ -29,13 +29,7 @@ module.exports = {
     let money = await client.db.get(`points_${message.guild.id}_${member.id}`);
     const points = interaction.options.getInteger('Points');
 
-    if (isNaN(points) || points === 0) {
-      await interaction.reply({ content: "The points must be an actual number!", ephemeral: true });
-      return;
-    } else if (!points) {
-      await interaction.reply({ content: "You must mention an amount of points to remove!", ephemeral: true });
-      return;
-    } else if (points < 0) {
+    if (points < 0) {
       await interaction.reply({ content: "You can't remove negative amount of points!", ephemeral: true });
       return;
     } else if (money < points) {
@@ -45,7 +39,7 @@ module.exports = {
 
     const embed = new MessageEmbed()
       .setColor("GREEN")
-      .setDescription(`Removed **${points}** from ${member}!`);
+      .setDescription(`Removed **${points}** points from ${member}!`);
 
     client.db.subtract(`points_${message.guild.id}_${member.id}`, points);
     await interaction.reply({ embeds: [embed], ephemeral: true });
