@@ -1,4 +1,4 @@
-const { MessageEmbed, SlashCommandBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ChatInputCommandInteraction } = require('discord.js');
+const { MessageEmbed, SlashCommandBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ChatInputCommandInteraction, Client } = require('discord.js');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -7,9 +7,10 @@ module.exports = {
   cooldown: 900,
 
   /**
-   * @param {ChatInputCommandInteraction} interaction 
+   * @param {ChatInputCommandInteraction} interaction
+   * @param {Client} _client
    */
-  async execute(interaction) {
+  async execute(interaction, _client) {
     const confirm = new ButtonBuilder()
       .setCustomId('confirm')
       .setLabel('Confirm')

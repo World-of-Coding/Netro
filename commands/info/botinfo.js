@@ -1,4 +1,4 @@
-const { MessageEmbed, SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js');
+const { MessageEmbed, SlashCommandBuilder, ChatInputCommandInteraction, Client } = require('discord.js');
 const os = require('os');
 const cpuStat = require('cpu-stat');
 
@@ -12,8 +12,9 @@ module.exports = {
   
   /**
    * @param {ChatInputCommandInteraction} interaction 
+   * @param {Client} client
    */
-  async execute(interaction) {
+  async execute(interaction, client) {
     cpuStat.usagePercent(async function(error, percent) {
       if (error) {
         await interaction.reply('We encountered an issue retrieving stats!');
@@ -23,9 +24,9 @@ module.exports = {
       const cores = os.cpus().length;
       const cpuModel = os.cpus()[0].model;
 
-      const guild = interaction.client.guilds.cache.size;
-      const user = interaction.client.guilds.cache.reduce((acc, g) => acc + g.memberCount, 0);
-      const channel = interaction.client.guilds.cache.reduce((acc, g) => acc + g.channels.cache.size, 0);
+      const guild = client.guilds.cache.size;
+      const user = client.guilds.cache.reduce((acc, g) => acc + g.memberCount, 0);
+      const channel = client.guilds.cache.reduce((acc, g) => acc + g.channels.cache.size, 0);
 
       const usage = formatBytes(process.memoryUsage().heapUsed);
       const Node = process.version;

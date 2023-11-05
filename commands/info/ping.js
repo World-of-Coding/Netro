@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ChatInputCommandInteraction } = require("discord.js");
+const { SlashCommandBuilder, ChatInputCommandInteraction, Client } = require("discord.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -7,8 +7,9 @@ module.exports = {
 
   /**
    * @param {ChatInputCommandInteraction} interaction 
+   * @param {Client} client
    */
-  async execute(interaction) {
-    await interaction.reply(`${interaction.client.ws.ping}ms`);
+  async execute(interaction, client) {
+    await interaction.reply(`${client.ws.ping}ms`);
   },
 };

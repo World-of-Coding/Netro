@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js');
+const { SlashCommandBuilder, ChatInputCommandInteraction, Client } = require('discord.js');
 const topics = require('../../assets/topics.json');
 
 module.exports = {
@@ -8,8 +8,9 @@ module.exports = {
 
   /**
    * @param {ChatInputCommandInteraction} interaction
+   * @param {Client} _client
    */
-  async execute(interaction) {
+  async execute(interaction, _client) {
     await interaction.reply(topics[Math.floor(Math.random() * topics.length)]);
   },
 };
