@@ -21,7 +21,7 @@ module.exports = {
   /**
    * @param {ChatInputCommandInteraction} interaction 
    */
-  async execute(interaction) {
+  async execute(interaction, client) {
     const member = interaction.options.getMember('User');
     if (member.bot) {
       await interaction.reply("You can't add points to a bot!");
@@ -33,8 +33,8 @@ module.exports = {
       .setColor("GREEN")
       .setDescription(`Added **${points}** to ${member}!`);
 
-	  await interaction.reply({ embeds: [embed], ephemeral: true });
-	  client.db.add(`points_${message.guild.id}_${member.id}`, points);
+     await interaction.reply({ embeds: [embed], ephemeral: true });
+     client.db.add(`points_${message.guild.id}_${member.id}`, points);
 
     let helper_check = await client.db.get(`points_${message.guild.id}_${member.id}`);
     if(helper_check >= 10) {

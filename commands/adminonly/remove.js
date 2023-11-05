@@ -20,7 +20,7 @@ module.exports = {
   /**
    * @param {ChatInputCommandInteraction} interaction
    */
-  async execute(interaction) {
+  async execute(interaction, client) {
     const member = interaction.options.getMember('User');
     if (member.bot) {
       await interaction.reply("You can't remove points from a bot!");
