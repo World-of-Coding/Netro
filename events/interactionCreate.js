@@ -1,35 +1,19 @@
-const client = require("../index");
+const { CommandInteraction, Client } = require("discord.js");
 
 module.exports = {
-    name: "interactionCreate", 
-    run: async (interaction) => {
-      // Slash Command Handling
-      if (interaction.isCommand()) {
-
-        const cmd = client.slashCommands.get(interaction.commandName);
-        if (!cmd) {return interaction.reply({ ephemeral: true, content: "An error has occured " });}
-
-        const args = [];
-
-        for (let option of interaction.options.data) {
-          if (option.type === "SUB_COMMAND") {
-            if (option.name) args.push(option.name);
-            option.options?.forEach((x) => {
-              if (x.value) args.push(x.value);
-            });
-          }
-          else if (option.value) {args.push(option.value);}
+    name: "interactionCreate",
+    /**
+     * 
+     * @param {CommandInteraction} interaction
+     * @param {Client} client 
+     */
+    async execute(interaction, client){
+        if(interaction.isChatInputCommand()){
+            const command = client.commands.get(interaction.commandName);
+    
+            if(!command) return interaction.reply({ content: "An error occurred during the execution of this command.", ephemeral: true });
+    
+            command.execute(interaction, client);
         }
-        interaction.member = interaction.guild.members.cache.get(interaction.user.id);
-
-        cmd.run(client, interaction, args).catch((e) => client.emit("error", e));
-      }
-
-      // Context Menu Handling
-      if (interaction.isContextMenu()) {
-        await interaction.deferReply();
-        const command = client.slashCommands.get(interaction.commandName);
-        if (command) command.run(client, interaction).catch(e => client.emit("error", e));
-      }
     }
-};
+}
