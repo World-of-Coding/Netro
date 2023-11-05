@@ -18,7 +18,7 @@ module.exports = {
   /**
    * @param {ChatInputCommandInteraction} interaction
    */
-  async execute(interaction) {
+  async execute(interaction, client) {
     const member = interaction.options.getMember('User');
     if (member.user.bot) {
       await interaction.reply({ content: "You cannot blacklist bots!", ephemeral: true });
