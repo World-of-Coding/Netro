@@ -8,20 +8,6 @@ const globPromise = promisify(glob);
  * @param {Client} client
  */
 module.exports = async (client) => {
-    // Commands
-    const commandFiles = await globPromise(`${process.cwd()}/commands/**/*.js`);
-    commandFiles.map((value) => {
-        const file = require(value);
-        const splitted = value.split("/");
-        const directory = splitted[splitted.length - 2];
-
-        if (file.name) {
-            const properties = { directory, ...file };
-            client.commands.set(file.name, properties);
-            client.cooldowns.set(file.name, new Collection());
-        }
-    });
-
     // Events
     const eventFiles = await globPromise(`${process.cwd()}/events/*.js`);
     eventFiles.map((value) => {
@@ -30,24 +16,23 @@ module.exports = async (client) => {
     });
 
     // Slash Commands
-    const slashCommands = await globPromise(
-      `${process.cwd()}/SlashCommands/*/*.js`
-    );
+    let commandsArray = [];
+    
+    const commandFolderRoot = fs.readdirSync("./commands");
 
-    const slashCommandsArray = [];
-    slashCommands.map((value) => {
-        const file = require(value);
-        if (!file?.name) return;
-        client.slashCommands.set(file.name, file);
+    for(const commandFolder of commandFolderRoot){
+        const commandFiles = fs.readdirSync(`./modules/commands/${commandFolder}`).filter((file) => file.endsWith(".js"));
 
-        if (["MESSAGE", "USER"].includes(file.type)) delete file.description;
-        slashCommandsArray.push(file);
-    });
-    client.once("ready", async () => {
-      await client.guilds.cache
-        .get("727166807240212501")
-        .commands.set(slashCommandsArray);
+        for(const commandFile of commandFiles){
+            const command = require(`../modules/commands/${commandFolder}/${commandFile}`);
+            
+            client.commands.set(command.data.name, command);
+            commandsArray.push(command.data.toJSON());
 
-    // await client.application.commands.set(arrayOfSlashCommands);
-    });
+            continue;
+        }
+    }
+
+    client.application.commands.set(commandsArray);
+    console.log("Loaded all commands successfully.");
 };
