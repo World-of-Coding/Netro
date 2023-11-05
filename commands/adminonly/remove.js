@@ -1,38 +1,57 @@
-const { MessageEmbed } = require('discord.js');
+const { MessageEmbed, SlashCommandBuilder, PermissionFlagsBits, ChatInputCommandInteraction } = require('discord.js');
 
 module.exports = {
-  name: 'remove',
-  args: true,
-  format: 'remove <user> <points>',
-  description: 'Remove points from a user!',
-  permissions: ["ADMINISTRATOR"],
-  myPermissions: [],
-  async run(client, message, args) {
-
-    let member = message.mentions.members.first() || message.author;
-    if (member.bot) return message.reply("You can't remove points from a bot!");
+  data: new SlashCommandBuilder()
+          .setName('remove')
+          .setDescription('Remove points from a user!')
+          .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+          .addUserOption(option =>
+            option
+              .setName('User')
+              .setDescription('User to remove points from.')
+              .setRequired(true))
+          .addIntegerOption(option =>
+            option
+              .setName('Points')
+              .setDescription('Amount of points to remove from User.')
+              .setRequired(true)),
+  
+  /**
+   * @param {ChatInputCommandInteraction} interaction
+   */
+  async execute(interaction) {
+    const member = interaction.options.getMember('User');
+    if (member.bot) {
+      await interaction.reply("You can't remove points from a bot!");
+      return;
+    }
 
     let money = await client.db.get(`points_${message.guild.id}_${member.id}`);
+    const points = interaction.options.getInteger('Points');
 
-    const points = args[1];
-    if (isNaN(points) || points === 0) return message.channel.send("The points must be an actual number!");
-    if (!points) return message.channel.send("You must mention an amount of points to remove!");
-    if (points < 0) return message.channel.send("You can't remove negative amount of points!");
-    if (money < points) return message.channel.send("The user doesn't have this much money!");
-
-    if (money === 0) return message.channel.send("The user doesn't have any money!");
+    if (isNaN(points) || points === 0) {
+      await interaction.reply({ content: "The points must be an actual number!", ephemeral: true });
+      return;
+    } else if (!points) {
+      await interaction.reply({ content: "You must mention an amount of points to remove!", ephemeral: true });
+      return;
+    } else if (points < 0) {
+      await interaction.reply({ content: "You can't remove negative amount of points!", ephemeral: true });
+      return;
+    } else if (money < points) {
+      await interaction.reply({ content: "The user doesn't have this much money!", ephemeral: true });
+      return;
+    }
 
     const embed = new MessageEmbed()
       .setColor("GREEN")
       .setDescription(`Removed **${points}** from ${member}!`);
 
-    message.channel.send({ embeds: [embed] });
-
-    client.db.subtract(`points_${message.guild.id}_${member.id}`, points) ;
+    client.db.subtract(`points_${message.guild.id}_${member.id}`, points);
+    await interaction.reply({ embeds: [embed], ephemeral: true });
     
-    member = message.guild.members.cache.get(member.id);
-    let points2 = await client.db.get(`points_${message.guild.id}_${member.id}`);
-    if(points2 >= 10) {
+    let helper_check = await client.db.get(`points_${message.guild.id}_${member.id}`);
+    if(helper_check < 10) {
         member.roles.remove(client.config.misc.helperRole)
     }
   }
