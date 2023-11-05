@@ -1,35 +1,43 @@
-const { MessageEmbed } = require('discord.js');
+const { MessageEmbed, SlashCommandBuilder, PermissionFlagsBits, ChatInputCommandInteraction } = require('discord.js');
 
 module.exports = {
-  name: 'add',
-  args: true,
-  format: 'add <user> <points>',
-  description: 'Add points to a user!',
-  permissions: ["ADMINISTRATOR"],
-  myPermissions: [],
-  async run(client, message, args) {
+  data: new SlashCommandBuilder()
+          .setName('add')
+          .setDescription('Add points to a user!')
+          .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+          .addUserOption(option =>
+            option
+              .setName('User')
+              .setDescription('User to add points to.')
+              .setRequired(true))
+          .addIntegerOption(option =>
+            option
+              .setName('Points')
+              .setDescription("Amount of points to give to User.")
+              .setRequired(true)
+              .setMinValue(1)
+              .setMaxValue(100)),
+  
+  /**
+   * @param {ChatInputCommandInteraction} interaction 
+   */
+  async execute(interaction) {
+    const member = interaction.options.getMember('User');
+    if (member.bot) {
+      await interaction.reply("You can't add points to a bot!");
+      return;
+    }
 
-    let member = message.mentions.members.first() || message.author;
-    if (member.bot) return message.reply("You can't add points to a bot!");
-
-    const points = args[1];
-
-    if (isNaN(points) || points === 0) return message.channel.send("The points must be an actual number!");
-    if (!points) return message.channel.send("You must include an amount of points to add!");
-    if (points < 0) return message.channel.send("You can't add negative amount of points!");
-    if (points > 100) return message.channel.send("You cannot add more then 100 points!");
-
+    const points = interaction.options.getInteger('Points');
     const embed = new MessageEmbed()
       .setColor("GREEN")
       .setDescription(`Added **${points}** to ${member}!`);
 
-	  message.channel.send({ embeds: [embed] });
-
+	  await interaction.reply({ embeds: [embed], ephemeral: true });
 	  client.db.add(`points_${message.guild.id}_${member.id}`, points);
-	  
-	  member = message.guild.members.cache.get(member.id);
-    let points2 = await client.db.get(`points_${message.guild.id}_${member.id}`);
-    if(points2 >= 10) {
+
+    let helper_check = await client.db.get(`points_${message.guild.id}_${member.id}`);
+    if(helper_check >= 10) {
         member.roles.add(client.config.misc.helperRole)
     }
   }
