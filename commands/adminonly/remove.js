@@ -14,7 +14,8 @@ module.exports = {
             option
               .setName('Points')
               .setDescription('Amount of points to remove from User.')
-              .setRequired(true)),
+              .setRequired(true)
+              .setMinValue(1)),
   
   /**
    * @param {ChatInputCommandInteraction} interaction
@@ -29,10 +30,7 @@ module.exports = {
     let money = await client.db.get(`points_${message.guild.id}_${member.id}`);
     const points = interaction.options.getInteger('Points');
 
-    if (points < 0) {
-      await interaction.reply({ content: "You can't remove negative amount of points!", ephemeral: true });
-      return;
-    } else if (money < points) {
+    if (money < points) {
       await interaction.reply({ content: "The user doesn't have this much money!", ephemeral: true });
       return;
     }

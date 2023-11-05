@@ -14,7 +14,9 @@ module.exports = {
             option
               .setName('Points')
               .setDescription("Amount of points to give to User.")
-              .setRequired(true)),
+              .setRequired(true)
+              .setMinValue(1)
+              .setMaxValue(100)),
   
   /**
    * @param {ChatInputCommandInteraction} interaction 
@@ -27,15 +29,6 @@ module.exports = {
     }
 
     const points = interaction.options.getInteger('Points');
-
-    if (points < 0) {
-      await interaction.reply({ content: "You can't add negative amount of points!", ephemeral: true });
-      return;
-    } else if (points > 100) {
-      await interaction.reply({ content: "You cannot add more then 100 points!", ephemeral: true });
-      return;
-    }
-
     const embed = new MessageEmbed()
       .setColor("GREEN")
       .setDescription(`Added **${points}** to ${member}!`);
