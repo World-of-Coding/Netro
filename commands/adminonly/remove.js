@@ -1,4 +1,4 @@
-const { MessageEmbed, SlashCommandBuilder, PermissionFlagsBits, ChatInputCommandInteraction } = require('discord.js');
+const { MessageEmbed, SlashCommandBuilder, PermissionFlagsBits, ChatInputCommandInteraction, Client } = require('discord.js');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -19,6 +19,7 @@ module.exports = {
   
   /**
    * @param {ChatInputCommandInteraction} interaction
+   * @param {Client} client
    */
   async execute(interaction, client) {
     const member = interaction.options.getMember('User');
