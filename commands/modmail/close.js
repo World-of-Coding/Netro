@@ -6,6 +6,7 @@ module.exports = {
   data: new SlashCommandBuilder()
           .setName('close')
           .setDescription('Closes a modmail ticket.')
+          .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
           .addBooleanOption(option =>
             option
               .setName('Anonymous')
