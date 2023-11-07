@@ -1,41 +1,54 @@
-const { MessageEmbed } = require('discord.js');
+const { MessageEmbed, SlashCommandBuilder, ChatInputCommandInteraction, Client } = require('discord.js');
 const talkedRecently = new Set();
 
 module.exports = {
-  name: 'thank',
-  args: true,
-  format: 'thank <user>',
-  description: 'Thank a user for helping you!',
-  permissions: [],
-  myPermissions: [],
+  data: new SlashCommandBuilder()
+          .setName('thank')
+          .setDescription('Thank a user for helping you!')
+          .addUserOption(option =>
+            option
+              .setName('User')
+              .setDescription('User to thank!')
+              .setRequired(true)),
 
-  async run(client, message) {
-    if (talkedRecently.has(message.author.id)) {
-      message.channel.send(`You can only run this command every 15 minutes!`);
+  /**
+   * @param {ChatInputCommandInteraction} interaction
+   * @param {Client} client
+   */
+  async execute(interaction, client) {
+    if (talkedRecently.has(interaction.user.id)) {
+      await interaction.reply({ content: `You can only run this command every 15 minutes!`, ephemeral: true });
       return;
     }
 
-    let member = message.mentions.members.first();
-    if (message.channel.parentId !== client.config.coding_help.parentCategory) return message.channel.send("You need to be in a coding help channel for this command to work!");
+    const member = interaction.options.getMember('User');
+    if (message.channel.parentId !== client.config.coding_help.parentCategory) {
+      await interaction.reply({ content: 'You need to be in a coding help channel for this command to work!', ephemeral: true });
+      return;
+    }
 
-    if (!member) return message.channel.send("You must mention a member to thank!");
-    if (member.id === message.author.id) return message.channel.send("You can't thank yourself, silly!") ;
-    if (member.user.bot) return message.channel.send("That's a bot!");
+    if (member.id === interaction.user.id) {
+      await interaction.reply({ content: 'You can\'t thank yourself, silly!', ephemeral: true });
+      return;
+    } else if (member.user.bot) {
+      await interaction.reply({ content: 'That\'s a bot!', ephemeral: true });
+      return;
+    }
+    
     const embed = new MessageEmbed()
       .setColor("GREEN")
       .setDescription(`${message.author} thanked ${member}! **+1 point**`);
-	  message.channel.send({ embeds: [embed] });
+	  await interaction.reply({ embeds: [embed] });
 
-    member = message.guild.members.cache.get(member.id);
     client.db.add(`points_${message.guild.id}_${member.id}`, 1)
     let points = await client.db.get(`points_${message.guild.id}_${member.id}`)
-    if(points >= 10) {
-        member.roles.add(client.config.misc.helperRole)
+    if (points >= 10) {
+        member.roles.add(client.config.misc.helperRole);
     }
 
-    talkedRecently.add(message.author.id);
+    talkedRecently.add(interaction.user.id);
     setTimeout(() => {
-      talkedRecently.delete(message.author.id);
+      talkedRecently.delete(interaction.user.id);
     }, 900000);
 
   }
