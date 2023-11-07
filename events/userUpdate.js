@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const client = require("../index");
 
 module.exports = {
@@ -6,7 +6,7 @@ module.exports = {
     run: async (oldUser, newUser) => {
       let shouldLog = false;
 
-      const updateEmbed = new MessageEmbed()
+      const updateEmbed = new EmbedBuilder()
         .setAuthor(newUser.tag, newUser.displayAvatarURL())
         .setColor('GREEN')
         .setFooter(`ID: ${newUser.id}`)

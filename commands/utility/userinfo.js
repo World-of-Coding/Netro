@@ -1,4 +1,4 @@
-const { MessageEmbed, SlashCommandBuilder, ChatInputCommandInteraction, Client } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder, ChatInputCommandInteraction, Client } = require('discord.js');
 const moment = require('moment');
 const CarouselEmbed = require('../../utils/carousel.js');
 
@@ -23,7 +23,7 @@ module.exports = {
     const avatar = user.displayAvatarURL({ dynamic: true });
     let embeds = [];
 
-    const userEmbed = new MessageEmbed()
+    const userEmbed = new EmbedBuilder()
       .setTitle("User Specific **" + user.tag + "**")
       .addFields(
         { name: 'Avatar', value: `[Click to Download](${avatar} "Click to download ${user.tag}'s avatar!")`, inline: false },
@@ -47,7 +47,7 @@ module.exports = {
     });
     if(roles.length < 1) { roles = "none"; }
 
-    const roleEmbed = new MessageEmbed()
+    const roleEmbed = new EmbedBuilder()
       .setTitle(`Roles **${user.tag}**`)
       .setDescription(`${roles}`)
       .setColor("RED");
@@ -60,7 +60,7 @@ module.exports = {
       type: "N/A"
     }];
     for(const activity of activities) {
-      const activityEmbed = new MessageEmbed()
+      const activityEmbed = new EmbedBuilder()
         .setTitle(`Activity **${user.tag}**`)
         .setThumbnail(avatar)
         .setColor('RED')

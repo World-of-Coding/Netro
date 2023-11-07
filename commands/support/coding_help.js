@@ -1,4 +1,4 @@
-const { MessageEmbed, SlashCommandBuilder, ChatInputCommandInteraction, Client, PermissionFlagsBits } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder, ChatInputCommandInteraction, Client, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -65,7 +65,7 @@ module.exports = {
     }
 
     const lang = roleMap[map_name.toLowerCase()];
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setDescription(`**${name}** help was requested by <@${interaction.user.id}>`)
       .setFooter(`User ID: ${interaction.user.id}`)
       .setTimestamp();

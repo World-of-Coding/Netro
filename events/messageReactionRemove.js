@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 
 const client = require("../index");
 
@@ -17,7 +17,7 @@ module.exports = {
 
       const member = reaction.message.guild.members.cache.get(user.id);
 
-      const reactionLog = new MessageEmbed()
+      const reactionLog = new EmbedBuilder()
         .setAuthor(`${member.user.tag}`, `${member.user.displayAvatarURL({ dynamic: true })}`)
         .setDescription(`${member.user.tag} (ID ${member.id}) unreacted to this [message](${reaction.message.url}) in ${reaction.message.channel} (ID ${reaction.message.channel.id})`)
         .setFooter(`WoC Reaction Roles`)

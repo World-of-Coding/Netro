@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const client = require("../index");
 
 /*client.on("guildMemberRemove", async (member) => {
@@ -10,7 +10,7 @@ module.exports = {
   name: "guildMemberRemove",
   run: async(member) => {
       if (member.guild.id !== client.config.target.server) return;
-      const logEmbed = new MessageEmbed()
+      const logEmbed = new EmbedBuilder()
         .setAuthor(`Member Left - ${member.user.tag}`, member.user.displayAvatarURL({ dynamic: true }))
         .setColor('RED')
         .addFields(

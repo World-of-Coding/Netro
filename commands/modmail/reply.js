@@ -1,4 +1,4 @@
-const { MessageEmbed, SlashCommandBuilder, PermissionFlagsBits, ChatInputCommandInteraction, Client } = require("discord.js");
+const { EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits, ChatInputCommandInteraction, Client } = require("discord.js");
 
 const mmConfig = require("../../config.json").modmail;
 module.exports = {
@@ -49,7 +49,7 @@ module.exports = {
       return;
     }
     
-    const userReply = new MessageEmbed()
+    const userReply = new EmbedBuilder()
       .setAuthor(embedName, embedProfile)
       .setDescription(replyContent)
       .setTimestamp()
@@ -62,7 +62,7 @@ module.exports = {
       member.send({ embeds: [userReply] });
     }
 
-    const staffReply = new MessageEmbed()
+    const staffReply = new EmbedBuilder()
       .setAuthor(embedName, embedProfile)
       .setDescription("Message sent")
       .addField("Message", replyContent)

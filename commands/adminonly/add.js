@@ -1,4 +1,4 @@
-const { MessageEmbed, SlashCommandBuilder, PermissionFlagsBits, ChatInputCommandInteraction, Client } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits, ChatInputCommandInteraction, Client } = require('discord.js');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -30,7 +30,7 @@ module.exports = {
     }
 
     const points = interaction.options.getInteger('Points');
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor("GREEN")
       .setDescription(`Added **${points}** to ${member}!`);
 

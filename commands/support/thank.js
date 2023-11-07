@@ -1,4 +1,4 @@
-const { MessageEmbed, SlashCommandBuilder, ChatInputCommandInteraction, Client } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder, ChatInputCommandInteraction, Client } = require('discord.js');
 const talkedRecently = new Set();
 
 module.exports = {
@@ -35,7 +35,7 @@ module.exports = {
       return;
     }
     
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor("GREEN")
       .setDescription(`${message.author} thanked ${member}! **+1 point**`);
 	  await interaction.reply({ embeds: [embed] });

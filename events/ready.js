@@ -1,5 +1,5 @@
 const client = require('../index');
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
     name: 'ready', 
@@ -7,7 +7,7 @@ module.exports = {
       // prevent internals to perform actions on invalid data
       await require('../utils/initialize_db')(client);
 
-      const bootupEmbed = new MessageEmbed()
+      const bootupEmbed = new EmbedBuilder()
         .setTitle("Startup complete")
         .setColor('GREEN')
         .setDescription(`Finished at ${new Date().toUTCString()}`)

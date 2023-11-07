@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const client = require("../index");
 
 module.exports = {
@@ -11,7 +11,7 @@ module.exports = {
       }
 
 
-      const bulkDeleteEmbed = new MessageEmbed()
+      const bulkDeleteEmbed = new EmbedBuilder()
         .setAuthor(`${messages.first().guild.name}`, `${messages.first().guild.iconURL({ dynamic: true })}`)
         .setColor('RED')
         .setDescription(`*Bulk Message Delete in <#${messages.first().channel.id}> (${messages.size})*`)

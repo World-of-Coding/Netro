@@ -1,4 +1,4 @@
-const { MessageEmbed, SlashCommandBuilder, ChatInputCommandInteraction, Client, PermissionFlagsBits } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder, ChatInputCommandInteraction, Client, PermissionFlagsBits } = require('discord.js');
 
 const mmConfig = require('../../config.json').modmail;
 
@@ -40,7 +40,7 @@ module.exports = {
 
     const modmailLog = client.channels.cache.get(client.config.logging.modmail);
     const transcript = await client.modmailMan.transcribe(message.channel);
-    const logEmbed = new MessageEmbed()
+    const logEmbed = new EmbedBuilder()
       .setAuthor(embedName, embedProfile)
       .setColor('RED')
       .setTitle('Thread closed')
@@ -53,7 +53,7 @@ module.exports = {
 
 
     if (member) {
-      const userClosedEmbed = new MessageEmbed()
+      const userClosedEmbed = new EmbedBuilder()
         .setAuthor(embedName, embedProfile)
         .setColor('RED')
         .setTitle('Thread closed')

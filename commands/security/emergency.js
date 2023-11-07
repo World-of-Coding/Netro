@@ -1,4 +1,4 @@
-const { MessageEmbed, SlashCommandBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ChatInputCommandInteraction, Client } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ChatInputCommandInteraction, Client } = require('discord.js');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -35,7 +35,7 @@ module.exports = {
       const confirmation = await response.awaitMessageComponent({ filter: component_filter, time: 5000 });
 
       if (confirmation.customId === 'confirm') {
-        const alertEmbed = new MessageEmbed()
+        const alertEmbed = new EmbedBuilder()
           .setTitle("Emergency")
           .setColor("RED")
           .setDescription("An emergency situation has occured. Please act accordingly.")

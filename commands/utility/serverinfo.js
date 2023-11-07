@@ -1,4 +1,4 @@
-const { MessageEmbed, TextChannel, SlashCommandBuilder, ChatInputCommandInteraction, Client } = require('discord.js');
+const { EmbedBuilder, TextChannel, SlashCommandBuilder, ChatInputCommandInteraction, Client } = require('discord.js');
 const moment = require('moment');
 const CarouselEmbed = require('../../utils/carousel');
 
@@ -51,7 +51,7 @@ module.exports = {
     const icon = interaction.guild.iconURL({ dynamic: true });
     const owner = await interaction.guild.fetchOwner();
 
-    const generalEmbed = new MessageEmbed()
+    const generalEmbed = new EmbedBuilder()
       .setTitle("Server Info " + interaction.guild.name)
       .addField("Icon", `[Click here to download!](${icon} "Click here to download ${interaction.guild.name}'s icon!")`, false)
       .addField('General', [
@@ -68,7 +68,7 @@ module.exports = {
       .setThumbnail(icon)
       .setColor("BLUE");
 
-    const statisticsEmbed = new MessageEmbed()
+    const statisticsEmbed = new EmbedBuilder()
       .setTitle(`Server Info ${interaction.guild.name}`)
       .setThumbnail(icon)
       .setColor("BLUE")
@@ -87,7 +87,7 @@ module.exports = {
         '\u200b'
       ].join('\n'));
 
-    const precenseEmbed = new MessageEmbed()
+    const precenseEmbed = new EmbedBuilder()
       .setTitle(`Server info ${interaction.guild.name}`)
       .addField("Icon", `[Click here to download!](${icon} "Click here to download ${interaction.guild.name}'s icon!")`, false)
       .setThumbnail(icon)
@@ -100,7 +100,7 @@ module.exports = {
         '\u200b'
       ].join('\n'));
 
-    const ageEmbed = new MessageEmbed()
+    const ageEmbed = new EmbedBuilder()
       .setTitle(`Server info ${interaction.guild.name}`)
       .addField("Icon", `[Click here to download!](${icon} "Click here to download ${interaction.guild.name}'s icon!")`, false)
       .setThumbnail(icon)
