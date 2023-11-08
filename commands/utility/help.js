@@ -1,5 +1,5 @@
 const {
-  MessageEmbed,
+  EmbedBuilder,
 } = require('discord.js');
 const {
   readdirSync,
@@ -66,7 +66,7 @@ module.exports = {
         ccate.push(nome);
       });
       // embed
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setTitle(`${client.user.username} Commands`)
         .setDescription(`Prefix - \`${prefix}\`\nUse \`help <category>\` to view commands under a specific category or use the dropdown!`)
         .addFields(categories)
@@ -140,7 +140,7 @@ module.exports = {
           });
 
           if (cots.includes(value.toLowerCase())) {
-            const combed = new MessageEmbed()
+            const combed = new EmbedBuilder()
               .setTitle(`${value.charAt(0) + value.slice(1)} commands`)
               .setDescription(`Use \`${prefix}help\` followed by a command name to get more information on a command.\nFor example: \`${prefix}help ping\`.\n\n`)
               .addFields(catts)
@@ -216,7 +216,7 @@ module.exports = {
                 );
 
     if (cots.includes(args[0].toLowerCase())) {
-      const combed = new MessageEmbed()
+      const combed = new EmbedBuilder()
         .setTitle(`${args[0].charAt(0) + args[0].slice(1)} commands`)
         .setDescription(`Use \`${prefix}help\` followed by a command name to get more information on a command.\nFor example: \`${prefix}help ping\`.\n\n`)
         .addFields(catts)
@@ -230,7 +230,7 @@ module.exports = {
     }
 
     if (!command) {
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setTitle(`Unknown command! Use \`${prefix}help\` for all of my commands!`)
         .setColor('RED');
       return await message.reply({
@@ -242,7 +242,7 @@ module.exports = {
     }
 
     // Command-specific help page
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setTitle('Command Details:')
       .addField(
         'Command:',

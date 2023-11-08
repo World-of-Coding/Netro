@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const client = require("../index");
 
 /*client.on("guildMemberAdd", async (member) => {
@@ -15,14 +15,14 @@ module.exports = {
         const newMember = ((member.user.createdTimestamp + 3600) > member.joinedTimestamp);
         const greetChannel = client.channels.cache.get(client.config.greeter.eventChannel);
 
-        const greetEmbed = new MessageEmbed()
+        const greetEmbed = new EmbedBuilder()
           .setTitle("Welcome")
           .setColor('GREEN')
           .setDescription(`${ newMember ? '⚠️ ' : ''}${member} Welcome to ${member.guild.name}!${newMember ? `\nThis account was created <t:${Date.now() - 	 (member.joinedTimestamp - member.user.createdTimestamp)}:R>` : ''}`);
         greetChannel.send({ embeds: [greetEmbed] });
       }
 
-      const logEmbed = new MessageEmbed()
+      const logEmbed = new EmbedBuilder()
         .setAuthor(`New Member - ${member.user.tag}`, member.user.displayAvatarURL({ dynamic: true }))
         .setColor('GREEN')
         .addFields(

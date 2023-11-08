@@ -1,4 +1,4 @@
-const { MessageEmbed, SlashCommandBuilder, ChatInputCommandInteraction, Client, PermissionFlagsBits } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder, ChatInputCommandInteraction, Client, PermissionFlagsBits } = require('discord.js');
 
 const mmConfig = require('../../config.json').modmail;
 
@@ -20,7 +20,7 @@ module.exports = {
 
     try {
       const trainingChannel = await client.modmailMan.create(interaction.guild, mmConfig.training.category, interaction.user, true);
-      const newThreadEmbed = new MessageEmbed()
+      const newThreadEmbed = new EmbedBuilder()
         .setTitle("New Training thread")
         .setColor("YELLOW")
         .setDescription(`${interaction.member}\n${interaction.member.id}`)

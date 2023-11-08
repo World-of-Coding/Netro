@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const client = require("../index");
 const str = require("@supercharge/strings");
 
@@ -22,7 +22,7 @@ module.exports = {
       
       if(message.channel.id == "717086840301027328" || message.channel.id == "879845373802315806") return;
 
-      const deleteEmbed = new MessageEmbed()
+      const deleteEmbed = new EmbedBuilder()
         .setAuthor(`${message.author.tag}`, `${message.author.displayAvatarURL({ dynamic: true })}`)
         .setColor('RED')
         .setDescription(`*Message Deleted in <#${message.channel.id}>*`)

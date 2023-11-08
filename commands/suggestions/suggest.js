@@ -24,9 +24,9 @@ module.exports = {
 
     const text = interaction.options.getString('Suggestion');
     let msg = await client.channels.cache.get(suggestionChannel).send({ embeds:[{ color:"GREEN", author: { name: interaction.user.tag, icon_url: interaction.user.displayAvatarURL({ dynamic: false }) }, description: text, footer: { text: interaction.guild.name, icon_url: interaction.guild.iconURL({ dynamic: false }) } }] });
-    msg.react("<:TickYes:832708609472987166>");
-    msg.react("<:TickNeutral:832708618779885619>");
-    msg.react("<:TickNo:832708631857463370>");
+    await msg.react("<:TickYes:832708609472987166>");
+    await msg.react("<:TickNeutral:832708618779885619>");
+    await msg.react("<:TickNo:832708631857463370>");
 
     await interaction.reply({ content: `<@${interaction.user.id}>`, embeds:[{ color:"GREEN", description:`Sent your suggestion! <#${suggestionChannel}>!` }], ephemeral: true });
   },

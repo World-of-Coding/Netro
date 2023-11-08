@@ -1,4 +1,4 @@
-const { Util, MessageEmbed, SlashCommandBuilder, PermissionFlagsBits, ChatInputCommandInteraction, Client } = require('discord.js');
+const { Util, EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits, ChatInputCommandInteraction, Client } = require('discord.js');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -36,12 +36,12 @@ module.exports = {
     await member.roles.add(client.config.misc.marketBlacklistRole);
     await member.roles.remove(client.config.misc.marketVerifyRole);
 
-    const resultEmbed = new MessageEmbed()
+    const resultEmbed = new EmbedBuilder()
       .setDescription(`${member.user.tag} has been blacklisted from **World of Coding's Marketplace** for: \n**${reason}**`)
       .setColor('RED');
     await interaction.reply({ embeds: [resultEmbed], ephemeral: true });
 
-    const notifyEmbed = new MessageEmbed()
+    const notifyEmbed = new EmbedBuilder()
       .setDescription(`You have been blacklisted from **World of Coding's Marketplace** for:\n${reason}`)
       .setColor('RED');
     await interaction.reply({ embeds:[notifyEmbed], ephemeral: true });

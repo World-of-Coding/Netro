@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const client = require("../index");
 
 function sleep(ms) {
@@ -36,7 +36,7 @@ client.on("guildMemberUpdate", async (oldMember, newMember) => {
     greetChannel.send(message);
   }
 
-  const embed = new MessageEmbed()
+  const embed = new EmbedBuilder()
     .setAuthor(newMember.user.tag, newMember.user.displayAvatarURL({ dynamic: true }))
     .setFooter(`ID: ${newMember.id}`)
     .setTimestamp();

@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 
 const { emojiCount } = require('../../utils/parsing.js');
 const { EMOJI_REGEX } = require('../../utils/regexes.js');
@@ -173,7 +173,7 @@ module.exports = {
     } while (flag);
 
 
-    const reactionEmbed = new MessageEmbed()
+    const reactionEmbed = new EmbedBuilder()
       .setTitle(embedTitle)
       .setDescription(embedDescription)
       .setColor(embedColor)

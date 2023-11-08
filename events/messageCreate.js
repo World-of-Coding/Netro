@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const Discord = require("discord.js");
 const client = require("../index");
 const target = client.config.target;
@@ -30,7 +30,7 @@ module.exports = {
           const modmailChannel = client.modmails.get(message.author.id)?.channel
                       || client.guilds.cache.get(target.server)?.channels.cache.find(c => c.name == `modmail-${message.author.id}` || c.name == `training-${message.author.id}`);
 
-          const embed = new MessageEmbed()
+          const embed = new EmbedBuilder()
             .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
             .setDescription(message.content || "*(empty message)*")
             .setColor("GREEN")
@@ -50,7 +50,7 @@ module.exports = {
 
           const guild = client.guilds.cache.get(target.server);
           if (!guild) {
-            const errorEmbed = new MessageEmbed()
+            const errorEmbed = new EmbedBuilder()
               .setDescription("Failed to find the guild, please contact the developer/owner about this!")
               .setColor("RED")
               .setTimestamp();
@@ -61,7 +61,7 @@ module.exports = {
 
           const category = guild.channels.cache.get(mmConfig.category);
           if (!category || category.type === "CATEGORY") {
-            const errorEmbed = new MessageEmbed()
+            const errorEmbed = new EmbedBuilder()
               .setDescription("Failed to find the category, please contact the developer/owner about this!")
               .setColor("RED")
               .setTimestamp();
@@ -72,7 +72,7 @@ module.exports = {
 
           const modmailChannel = await client.modmailMan.create(guild, category, message.author).catch(e => { message.channel.send(e.message); });
 
-          const newThreadEmbed = new MessageEmbed()
+          const newThreadEmbed = new EmbedBuilder()
             .setTitle("New thread")
             .setColor("BLUE")
             .setDescription(`${message.author}\n${message.author.id}`)
@@ -80,21 +80,21 @@ module.exports = {
             .setTimestamp();
           modmailChannel.send({ content: mmConfig.customMessage, embeds: [newThreadEmbed] });
 
-          const firstMessageEmbed = new MessageEmbed()
+          const firstEmbedBuilder = new EmbedBuilder()
             .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
             .setDescription(message.content)
             .setColor("GREEN")
             .setTimestamp();
-          modmailChannel.send({ embeds: [firstMessageEmbed], files: [...message.attachments.values()] });
+          modmailChannel.send({ embeds: [firstEmbedBuilder], files: [...message.attachments.values()] });
 
-          const newNotifyEmbed = new MessageEmbed()
+          const newNotifyEmbed = new EmbedBuilder()
             .setTitle("Created a new thread!")
             .setDescription("Please wait patiently as we get to you as soon as we can!")
             .setColor("GREEN")
             .setTimestamp();
           message.channel.send({ embeds: [newNotifyEmbed] });
 
-          const newLogEmbed = new MessageEmbed()
+          const newLogEmbed = new EmbedBuilder()
             .setTitle("New thread")
             .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
             .setDescription(`${message.author.tag} has created a new thread\n<#${modmailChannel.id}>`)
@@ -135,7 +135,7 @@ module.exports = {
 
         if (now < expiresIn && !message.member.permissions.has('ADMINISTRATOR')) {
           const timeLeft = (expiresIn - now) / 1000;
-          const cooldownNotify = new MessageEmbed()
+          const cooldownNotify = new EmbedBuilder()
             .setColor("RED")
             .setTitle("In Cooldown")
             .setDescription("Please wait until the cooldown expires!")
@@ -150,7 +150,7 @@ module.exports = {
       const botHasPermissions = message.guild.me?.permissions.has(command.permissions || []);
 
       if (!userHasPermissions || !botHasPermissions) {
-        const permsNotify = new MessageEmbed()
+        const permsNotify = new EmbedBuilder()
           .setColor("RED")
           .setTitle("Insufficient Permissions!")
           .setDescription(`${!userHasPermissions ? "You" : "I"} don't have enough permissions to do this!`)

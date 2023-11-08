@@ -1,4 +1,4 @@
-const { MessageEmbed, SlashCommandBuilder, ChatInputCommandInteraction, Client } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder, ChatInputCommandInteraction, Client } = require('discord.js');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -13,7 +13,7 @@ module.exports = {
     const memberCount = interaction.guild.memberCount;
     const bots = interaction.guild.members.cache.filter(m => m.user.bot).size;
 
-    const countEmbed = new MessageEmbed()
+    const countEmbed = new EmbedBuilder()
       .setColor('BLUE')
       .setTitle("__Members__")
       .addField("Total", `${memberCount}`)
