@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ChatInputCommandInteraction, Client, PermissionFlagsBits } = require("discord.js");
+const { SlashCommandBuilder, ChatInputCommandInteraction, Client, PermissionFlagsBits, EmbedBuilder } = require("discord.js");
 
 const mmConfig = client.config.modmail;
 
@@ -31,7 +31,7 @@ module.exports = {
         
         // Create the modmail channel and send the initial thread notification.
         const modmailChannel = await client.modmailMan.create(interaction.guild, category, interaction.user).catch(async e => { await interaction.reply({ content: e.message, ephemeral: true }); });
-        const newThreadEmbed = new MessageEmbed()
+        const newThreadEmbed = new EmbedBuilder()
             .setTitle("New thread")
             .setColor("BLUE")
             .setDescription(`${user}\n${user.id}`)
@@ -41,13 +41,13 @@ module.exports = {
         await modmailChannel.send({ content: mmConfig.customMessage, embeds: [newThreadEmbed] });
 
         // Send the member a DM notifying them that staff has opened a modmail on their behalf and the initial message.
-        const newNotifyEmbed = new MessageEmbed()
+        const newNotifyEmbed = new EmbedBuilder()
             .setTitle("A new thread has been started by a staff member!")
             .setDescription("Please reply as soon as possible!")
             .setColor("GREEN")
             .setTimestamp();
         
-        const firstMessageEmbed = new MessageEmbed()
+        const firstMessageEmbed = new EmbedBuilder()
             .setAuthor(interaction.user.tag, interaction.user.avatarURL({ dynamic: true }))
             .setDescription(message)
             .setColor("GREEN")
