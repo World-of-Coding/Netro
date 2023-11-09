@@ -1,4 +1,4 @@
-const { MessageEmbed, SlashCommandBuilder, ChatInputCommandInteraction, Client } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder, ChatInputCommandInteraction, Client } = require('discord.js');
 const os = require('os');
 const cpuStat = require('cpu-stat');
 
@@ -32,7 +32,7 @@ module.exports = {
       const Node = process.version;
       const CPU = percent.toFixed(2);
 
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .addField('Bot Statistics:', `Servers: **${guild}** \nUser: **${user}** \nChannel: **${channel}** \nStorage use: **${usage}** \nNode version: **${Node}** \nCPU Usage: **${CPU}%**`)
         .addField('Physical Statistics:', `CPU: **${cores}** - **${cpuModel}** \nUptime: **${parseDur(client.uptime)}**`)
         .setColor("RED");

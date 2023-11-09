@@ -1,25 +1,26 @@
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder, ChatInputCommandInteraction, Client } = require('discord.js');
 
 module.exports = {
-  name: "membercount",
-  args: false,
-  permissions: [],
-  myPermissions: [],
-  aliases: ["usercount"],
-  description: "Gets the member count of the server",
-  async run(_client, message) {
+  data: new SlashCommandBuilder()
+          .setName('membercount')
+          .setDescription('Gets the member count of the server.'),
+  
+  /**
+   * @param {ChatInputCommandInteraction} interaction
+   * @param {Client} _client
+   */
+  async execute(interaction, _client) {
+    const memberCount = interaction.guild.memberCount;
+    const bots = interaction.guild.members.cache.filter(m => m.user.bot).size;
 
-    const memberCount = message.guild.memberCount;
-    const bots = message.guild.members.cache.filter(m => m.user.bot).size;
-
-    const countEmbed = new MessageEmbed()
+    const countEmbed = new EmbedBuilder()
       .setColor('BLUE')
       .setTitle("__Members__")
       .addField("Total", `${memberCount}`)
       .addField("Humans", `${memberCount - bots}`)
       .addField("Bots", `${bots}`)
-      .setFooter(message.guild.name, message.guild.iconURL({ dynamic: true }));
+      .setFooter(interaction.guild.name, interaction.guild.iconURL({ dynamic: true }));
 
-	  message.channel.send({ embeds: [countEmbed] });
+	  await interaction.reply({ embeds: [countEmbed] });
   }
 };

@@ -1,4 +1,4 @@
-const { MessageEmbed, SlashCommandBuilder, PermissionFlagsBits, ChatInputCommandInteraction } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits, ChatInputCommandInteraction, Client } = require('discord.js');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -19,7 +19,8 @@ module.exports = {
               .setMaxValue(100)),
   
   /**
-   * @param {ChatInputCommandInteraction} interaction 
+   * @param {ChatInputCommandInteraction} interaction
+   * @param {Client} client
    */
   async execute(interaction, client) {
     const member = interaction.options.getMember('User');
@@ -29,7 +30,7 @@ module.exports = {
     }
 
     const points = interaction.options.getInteger('Points');
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor("GREEN")
       .setDescription(`Added **${points}** to ${member}!`);
 

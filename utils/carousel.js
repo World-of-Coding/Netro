@@ -12,20 +12,20 @@ module.exports = class CarouselEmbed {
     await message.react('▶️').catch((e) => { console.warn(e.message); });
     await message.react('🗑').catch((e) => { console.warn(e.message); });
 
-    const backwardsFilter = (reaction, user) => reaction.emoji.name === '◀️' && user.id == msg.author.id;
+    const backwardsFilter = (reaction, user) => reaction.emoji.name === '◀️' && user.id == msg.user.id;
     const forwardsFilter = (reaction, user) => reaction.emoji.name === '▶️' && user.id == msg.author.id;
     const destroyFilter = (reaction, user) => reaction.emoji.name === '❌' && user.id == msg.author.id;
 
     const backwards = message.createReactionCollector({ filter: backwardsFilter, time: 120000 });
     backwards.on('collect', async (r) => {
-		 	await r.users.remove(msg.author);
+		 	await r.users.remove(msg.user);
 		 	page = page == 0 ? 0 : page - 1;
 		 	await message.edit({ embeds: [this.embeds[page]] });
     });
 
     const forwards = message.createReactionCollector({ filter: forwardsFilter, time: 120000 });
     forwards.on('collect', async (r) => {
-      await r.users.remove(msg.author);
+      await r.users.remove(msg.user);
 	     	page = page == (this.embeds.length - 1) ? this.embeds.length - 1 : page + 1;
       await message.edit({ embeds: [this.embeds[page]] });
 	    });

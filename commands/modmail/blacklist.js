@@ -1,36 +1,53 @@
-module.exports = {
-  name: 'blacklist',
-  description: 'Blacklists/unblacklists someone from using the modmail system',
-  args: true,
-  format: 'blacklist <user>',
-  aliases: ['unblacklist'],
-  permissions: ['MANAGE_MESSAGES'],
-  myPermissions: [],
-  async run(client, message, args) {
+const { SlashCommandBuilder, PermissionFlagsBits, ChatInputCommandInteraction, Client } = require("discord.js");
 
-    const command = message.content.slice(client.config.prefix.length).trim().split(" ")[0];
-    console.log(command);
+module.exports = {
+  data: new SlashCommandBuilder()
+          .setName('blacklist')
+          .setDescription('Blacklists/unblacklists someone from using modmail.')
+          .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
+          .addUserOption(option =>
+            option
+              .setName('User')
+              .setDescription('User to blacklist/unblacklist.')
+              .setRequired(true))
+          .addBooleanOption(option =>
+            option
+              .setName('Blacklist')
+              .setDescription('Flag to determine if you blacklist or unblacklist the User.')
+              .setRequired(true)),
+          
+  /**
+   * @param {ChatInputCommandInteraction} interaction
+   * @param {Client} client
+   */
+  async execute(interaction, client) {
     const blackListed = await client.db.get('modmail_blacklistedUsers');
 
-    const member = message.mentions.members.first() || message.guild.members.cache.find(m => m.user.username.toLowerCase() == args[0]?.toLowerCase())  || message.guild.members.fetch(args[0]).catch(()=>{});
-    if(!member) return message.channel.send("Could not find the user!");
-    if(!member.user) return message.channel.send("Could not find the user!");
-    if(member.user.bot || member.bot) return message.channel.send("You cannot blacklist bots!");
+    const member = interaction.options.getMember('User');
+    if(member.bot) {
+      await interaction.reply({ content: 'You cannot blacklist bots!', ephemeral: true });
+      return;
+    }
 
-    if(command.toLowerCase() == 'blacklist') {
-
-      if(blackListed.indexOf(member.user.id) != -1) return message.channel.send("That user is already blacklisted!");
+    if(interaction.options.getBoolean('Blacklist')) {
+      if (blackListed.indexOf(member.user.id) != -1) {
+        await interaction.reply({ content: 'That user is already blacklisted!', ephemeral: true });
+        return;
+      }
 
       blackListed.push(member.user.id);
-      message.channel.send(`**${member.user.tag}** has been blacklisted!`);
+      await interaction.reply(`**${member.user.tag}** has been blacklisted!`);
     }
     else {
-
-      if(blackListed.indexOf(member.user.id) == -1) return message.channel.send("That user is not blacklisted!");
+      if (blackListed.indexOf(member.user.id) == -1) {
+        await interaction.reply({ content: 'That user is not blacklisted!', ephemeral: true });
+        return;
+      }
 
       blackListed.splice(blackListed.indexOf(member.user.id), 1);
-      message.channel.send(`**${member.user.tag}** has been unblacklisted!`);
+      await interaction.reply(`**${member.user.tag}** has been unblacklisted!`);
     }
+    
     client.db.set('modmail_blacklistedUsers', blackListed);
   }
 };

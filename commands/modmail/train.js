@@ -1,34 +1,36 @@
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder, ChatInputCommandInteraction, Client, PermissionFlagsBits } = require('discord.js');
 
 const mmConfig = require('../../config.json').modmail;
 
 module.exports = {
-  name: 'train',
-  description: 'Create a training ticket',
+  data: new SlashCommandBuilder()
+          .setName('train')
+          .setDescription('Create a training ticket.')
+          .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
-  run: async (client, message, _args) => {
-    if (!mmConfig.training?.role || !mmConfig.training?.category) {
-      return message.channel.send('Failed to create training session: client is not configured.');
-    }
-	await message.member?.fetch().catch(()=>{});
-    await message.guild?.roles.fetch(mmConfig.training.role).catch(()=>{});
-    if (!message.member?.roles.cache.has(mmConfig.training.role) && !message.member.permissions.has('ADMINISTRATOR')) {
-      return message.channel.send("You don't have enough permission to create a training session!");
+  /**
+   * @param {ChatInputCommandInteraction} interaction
+   * @param {Client} client
+   */
+  async execute(interaction, client) {
+    if (!mmConfig.training?.category) {
+      await interaction.reply({ content: 'Failed to create training session, client is not configured.', ephemeral: true });
+      return;
     }
 
     try {
-      const trainingChannel = await client.modmailMan.create(message.guild, mmConfig.training.category, message.author, true);
-      const newThreadEmbed = new MessageEmbed()
+      const trainingChannel = await client.modmailMan.create(interaction.guild, mmConfig.training.category, interaction.user, true);
+      const newThreadEmbed = new EmbedBuilder()
         .setTitle("New Training thread")
         .setColor("YELLOW")
-        .setDescription(`${message.author}\n${message.author.id}`)
-        .setFooter("have fun")
+        .setDescription(`${interaction.member}\n${interaction.member.id}`)
+        .setFooter("Have fun!")
         .setTimestamp();
       trainingChannel.send({ embeds: [newThreadEmbed] });
-      message.channel.send(`Success, created a new training channel at <#${trainingChannel.id}>`);
+      await interaction.reply(`Success, created a new training channel at <#${trainingChannel.id}>`);
     }
     catch (e) {
-      message.channel.send(`An error occured while creating a training thread: ${e.message}.`);
+      await interaction.reply({ content: `An error occured while creating a training thread:\n${e.message}.`, ephemeral: true });
     }
   },
 };

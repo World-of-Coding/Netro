@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const client = require("../index");
 
 /*client.on("guildBanRemove", async (ban) => {
@@ -18,7 +18,7 @@ module.exports = {
   run: async(ban) => {
       if (ban.guild.id != client.config.target.server) return;
 
-      const banEmbed = new MessageEmbed()
+      const banEmbed = new EmbedBuilder()
         .setAuthor("Member unbanned", ban.user.displayAvatarURL({ dynamic: true }))
         .setColor('GREEN')
         .addFields(

@@ -1,53 +1,68 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits, ChatInputCommandInteraction, Client } = require("discord.js");
 
 const mmConfig = require("../../config.json").modmail;
 module.exports = {
-  name: "reply",
-  aliases: ['r'],
-  flags: true,
-  permissions: ["MANAGE_MESSAGES"],
-  description: 'Reply to a modmail ticket',
+  data: new SlashCommandBuilder()
+          .setName('reply')
+          .setDescription('Reply to a modmail ticket.')
+          .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
+          .addStringOption(option =>
+            option
+              .setName('Message')
+              .setDescription('Message to respond with.')
+              .setRequired(true)
+              .setMaxLength(1024))
+          .addAttachmentOption(option =>
+            option
+              .setName('Attachment')
+              .setDescription('Attachment to send with the response.'))
+          .addBooleanOption(option =>
+            option
+              .setName('Anonymous')
+              .setDescription('Send the response anonymously or not.')),
 
-  run: async (client, message, args, flags) => {
-    const replyContent = args.join(" ");
-    // TODO: improve flag handler so we can remove this
-
-    if (message.channel.parentId != mmConfig.category && message.channel.parentId != mmConfig.training?.category) {
-      return message.channel.send("This command must be used in a modmail channel!");
+  /**
+   * @param {ChatInputCommandInteraction} interaction
+   * @param {Client} _client
+   */
+  async execute(interaction, _client) {
+    if (interaction.channel.parentId != mmConfig.category && interaction.channel.parentId != mmConfig.training?.category) {
+      await interaction.reply({ content: 'This command must be used in a modmail channel!', ephemeral: true });
+      return;
     }
 
-    if (!args[0] && !message.attachments.first()) {
-      return message.channel.send("You need to include a message to send!");
-    }
-     
-    if (replyContent.length > 1024 && !message.attachments.first())
-        return message.channel.send("Your message content must be less than or equal to 1024 characters");
-
-    const memberId = message.channel.name.split("-")[1];
-    const member = await message.guild.members.fetch(memberId).catch(()=>{});
+    const memberId = interaction.channel.name.split("-")[1];
+    const member = await interaction.guild.members.fetch(memberId).catch(()=>{});
     if (!member) {
-      return message.channel.send("Failed to find the user to reply to!");
+      await interaction.reply('Failed to find the user to reply to!');
+      return;
     }
 
-    message.delete();
+    const isAnonymous = interaction.options.getBoolean('Anonymous') ?? false;
 
-    const firstFlag = flags[0] ? flags[0][1] : false;
-    const isAnonymous = firstFlag === "-a" || firstFlag === "--anonymous";
+    const embedName = isAnonymous ? (interaction.member.permissions.has(PermissionFlagsBits.Administrator) ? "Administrator Team" : "Moderation Team") : interaction.user.tag;
+    const embedProfile = isAnonymous ? mmConfig.anonymousProfile : interaction.user.avatarURL({ dynamic: true });
 
-    const embedName = isAnonymous ? (message.member.permissions.has('ADMINISTRATOR') ? "Administrator Team" : "Moderation Team") : message.author.tag;
-    const embedProfile = isAnonymous ? mmConfig.anonymousProfile : message.author.avatarURL({ dynamic: true });
-
-    const sizeLimitFilter = (file) => file.size > 8_000_000;
-    if (message.attachments.some(sizeLimitFilter)) return message.channel.send("Cannot send; file exceeds maximum size of 8MB!");
-
-    const userReply = new MessageEmbed()
+    const file = interaction.options.getAttachment('Attachment');
+    if (file.size > 8_000_000) {
+      await interaction.reply({ content: 'Unable to send response, attached file exceeds 8MB!', ephemeral: true });
+      return;
+    }
+    
+    const userReply = new EmbedBuilder()
       .setAuthor(embedName, embedProfile)
       .setDescription(replyContent)
       .setTimestamp()
       .setColor("BLUE");
-    member.send({ embeds: [userReply], files: [...message.attachments.values()] });
 
-    const staffReply = new MessageEmbed()
+    if (file) {
+      member.send({ embeds: [userReply], files: [{ attachment: file.url, name: 'attachment.jpg' }] });
+    }
+    else {
+      member.send({ embeds: [userReply] });
+    }
+
+    const staffReply = new EmbedBuilder()
       .setAuthor(embedName, embedProfile)
       .setDescription("Message sent")
       .addField("Message", replyContent)
@@ -55,8 +70,14 @@ module.exports = {
       .setColor("BLUE");
 
     if (isAnonymous) {
-      staffReply.setFooter(message.author.tag);
+      staffReply.setFooter(interaction.user.tag);
     }
-    message.channel.send({ embeds: [staffReply], files: [...message.attachments.values()] });
+
+    if (file) {
+      await interaction.reply({ embeds: [staffReply], files: [{ attachment: file.url, name: 'attachment.jpg' }] });
+    }
+    else {
+      await interaction.reply({ embeds: [staffReply] });
+    }
   }
 };

@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const client = require("../index");
 const str = require('@supercharge/strings');
 const automod = require("../utils/automod.js");
@@ -29,7 +29,7 @@ module.exports = {
 
       if (oldMessage.content != newMessage.content) {
         if(newMessage.channel.id == "717086840301027328" || newMessage.channel.id == "879845373802315806") return;
-        const contentChangeEmbed = new MessageEmbed()
+        const contentChangeEmbed = new EmbedBuilder()
           .setAuthor(`${newMessage.author.tag}`, `${newMessage.author.displayAvatarURL({ dynamic: true })}`)
           .setColor('YELLOW')
           .setDescription(`*Message updated in <#${newMessage.channel.id}> [Jump](${newMessage.url})*`)

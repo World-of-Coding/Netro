@@ -1,52 +1,59 @@
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder, ChatInputCommandInteraction, Client, PermissionFlagsBits } = require('discord.js');
 
 const mmConfig = require('../../config.json').modmail;
 
 module.exports = {
-  name: 'close',
-  aliases: ['c'],
-  flags: true,
-  permissions: ['MANAGE_MESSAGES'],
-  description: 'Close a modmail ticket',
+  data: new SlashCommandBuilder()
+          .setName('close')
+          .setDescription('Closes a modmail ticket.')
+          .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
+          .addBooleanOption(option =>
+            option
+              .setName('Anonymous')
+              .description('Close the ticket anonymously or not.')),
 
-  run: async (client, message, args, flags) => {
-    if (message.channel.parentId != mmConfig.category && message.channel.parentId != mmConfig.training?.category) {
-      return message.channel.send('This command must be used in a modmail channel!');
+  /**
+   * @param {ChatInputCommandInteraction} interaction
+   * @param {Client} client
+   */
+  async execute(interaction, client) {
+    if (interaction.channel.parentId != mmConfig.category && interaction.channel.parentId != mmConfig.training?.category) {
+      await interaction.reply({ content: 'This command must be used in a modmail channel!', ephemeral: true });
+      return;
     }
 
-    const firstFlag = flags[0] ? flags[0][1] : false;
-    const isAnonymous = firstFlag === '-a' || firstFlag === '--anonymous';
+    const isAnonymous = interaction.options.getBoolean('Anonymous') ?? false;
 
-    const embedName = isAnonymous ? 'Moderation Team' : message.author.tag;
-    const embedProfile = isAnonymous ? mmConfig.anonymousProfile : message.author.avatarURL({ dynamic: true });
+    const embedName = isAnonymous ? (interaction.member.permissions.has(PermissionFlagsBits.Administrator) ? "Administrator Team" : "Moderation Team") : interaction.user.tag;
+    const embedProfile = isAnonymous ? mmConfig.anonymousProfile : interaction.user.avatarURL({ dynamic: true });
 
-    const memberId = message.channel.name.split('-')[1];
-    const member = message.guild.members.cache.get(memberId);
+    const memberId = interaction.channel.name.split('-')[1];
+    const member = interaction.guild.members.cache.get(memberId);
 
     try {
-      client.modmailMan.delete(message.channel, memberId);
+      client.modmailMan.delete(interaction.channel, memberId);
     }
     catch (e) {
-      message.channel.send(e.message);
+      await interaction.reply(`An error occurred trying to delete the channel:\n${e.message}`);
       return;
     }
 
     const modmailLog = client.channels.cache.get(client.config.logging.modmail);
     const transcript = await client.modmailMan.transcribe(message.channel);
-    const logEmbed = new MessageEmbed()
+    const logEmbed = new EmbedBuilder()
       .setAuthor(embedName, embedProfile)
       .setColor('RED')
       .setTitle('Thread closed')
-      .setDescription(`${embedName} has closed ${message.channel.topic}'s ticket`);
+      .setDescription(`${embedName} has closed ${interaction.channel.topic}'s ticket`);
 
     if (isAnonymous) {
-      logEmbed.setFooter(message.author.tag);
+      logEmbed.setFooter(interaction.user.tag);
     }
     modmailLog.send({ embeds: [logEmbed], files: [transcript] });
 
 
     if (member) {
-      const userClosedEmbed = new MessageEmbed()
+      const userClosedEmbed = new EmbedBuilder()
         .setAuthor(embedName, embedProfile)
         .setColor('RED')
         .setTitle('Thread closed')
