@@ -1,49 +1,52 @@
-const client = require('../index');
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, Client, Events } = require('discord.js');
 
 module.exports = {
-    name: 'ready', 
-    run: async () => {
-      // prevent internals to perform actions on invalid data
-      await require('../utils/initialize_db')(client);
+	name: Events.ClientReady,
+	/**
+	 * @param {Client} client
+	 * @param {Client} _client
+	 */
+	async execute(client, _client) {
+		// prevent internals to perform actions on invalid data
+		await require('../utils/initialize_db')(client);
 
-      const bootupEmbed = new EmbedBuilder()
-        .setTitle("Startup complete")
-        .setColor('GREEN')
-        .setDescription(`Finished at ${new Date().toUTCString()}`)
-        .setTimestamp();
+		const bootupEmbed = new EmbedBuilder()
+			.setTitle("Startup complete")
+			.setColor('GREEN')
+			.setDescription(`Finished at ${new Date().toUTCString()}`)
+			.setTimestamp();
 
-      if (client.config.logging.botBootup.enable) {
-        const logChannel = client.channels.cache.get(client.config.logging.botBootup.channel);
-        logChannel.send({ embeds: [bootupEmbed] });
-      };
-      console.log(`${client.user.tag} is up and ready to go!`);
+		if (client.config.logging.botBootup.enable) {
+			const logChannel = client.channels.cache.get(client.config.logging.botBootup.channel);
+			await logChannel.send({ embeds: [bootupEmbed] });
+		};
 
-      // Set presence
-      //
-      // This only needs to be ran once on startup,
-      // to avoid having multiple intervals changing presence.
+		console.log(`${client.user.tag} is up and ready to go!`);
 
-      function *presenceGen() {
-        let presenceList = [
-          { status: "boopy cry", type: "WATCHING" },          
-        ];
-        let i = 0;
-        while(true) {
-          yield presenceList[i];
+		// Set presence
+		//
+		// This only needs to be ran once on startup,
+		// to avoid having multiple intervals changing presence.
+		function *presenceGen() {
+			let presenceList = [
+				{ status: "boopy cry", type: "WATCHING" },					
+			];
+			let i = 0;
+			while(true) {
+				yield presenceList[i];
 
-          if(i == (presenceList.length - 1)) { i = 0; }
-          else { i++; }
-        }
-      }
+				if(i == (presenceList.length - 1)) { i = 0; }
+				else { i++; }
+			}
+		}
 
-      const presences = presenceGen();
-      const firstActivity = presences.next().value;
-      client.user.setActivity(firstActivity.status, { type: firstActivity.type });
+		const presences = presenceGen();
+		const firstActivity = presences.next().value;
+		client.user.setActivity(firstActivity.status, { type: firstActivity.type });
 
-      setInterval(() => {
-        const activity = presences.next().value;
-        client.user.setActivity(activity.status, { type: activity.type });
-      }, 20000);
-    }
+		setInterval(() => {
+			const activity = presences.next().value;
+			client.user.setActivity(activity.status, { type: activity.type });
+		}, 20000);
+	}
 };
