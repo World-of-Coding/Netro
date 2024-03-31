@@ -6,31 +6,10 @@ module.exports = {
           .setDescription('Pings coding help corresponding to your selection.')
           .addStringOption(option =>
             option
-              .setName('Language')
+              .setName('language')
               .setDescription('Language to request help with.')
               .setRequired(true)
-              .setAutocomplete(true)
-              .addChoices(
-                { name: 'Lua', value: 'Lua' },
-                { name: 'JavaScript', value: 'JavaScript' },
-                { name: 'Python', value: 'Python' },
-                { name: 'Ruby', value: 'Ruby' },
-                { name: 'Java', value: 'Java' },
-                { name: 'C++', value: 'C++' },
-                { name: 'C#', value: 'C#'},
-                { name: 'HTML', value: 'HTML' },
-                { name: 'CSS', value: 'CSS' },
-                { name: 'Swift', value: 'Swift' },
-                { name: 'TypeScript', value: 'TypeScript' },
-                { name: 'Golang', value: 'Golang' },
-                { name: 'PHP', value: 'PHP' },
-                { name: 'Infosec', value: 'Infosec' },
-                { name: 'Cybersec', value: 'Cybersec' },
-                { name: 'Tech', value: 'Tech' },
-                { name: 'OS', value: 'OS' },
-                { name: 'Algorithm', value: 'Algorithm' },
-                { name: 'Other', value: 'Other' }
-              )),
+            ),
   cooldown: 300,
   
   /**

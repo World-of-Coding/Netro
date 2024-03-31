@@ -6,7 +6,7 @@ module.exports = {
           .setDescription('Displays your points balance.')
           .addUserOption(option =>
             option
-              .setName('User')
+              .setName('user')
               .setDescription('Another user to display the balance of.')),
 
   /**

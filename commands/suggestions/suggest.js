@@ -6,7 +6,7 @@ module.exports = {
           .setDescription('Send a suggestion to the suggestions channel.')
           .addStringOption(option =>
             option
-              .setName('Suggestion')
+              .setName('suggestion')
               .setDescription('Your suggestion to staff.')
               .setRequired(true)),
 

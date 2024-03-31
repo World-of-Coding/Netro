@@ -8,7 +8,7 @@ module.exports = {
           .setDescription('Info of another user or yourself.')
           .addUserOption(option =>
             option
-              .setName('User')
+              .setName('user')
               .setDescription('User to get the info of.')),
   cooldown: 5,
 

@@ -7,12 +7,12 @@ module.exports = {
           .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
           .addUserOption(option =>
             option
-              .setName('User')
+              .setName('user')
               .setDescription('User to blacklist/unblacklist.')
               .setRequired(true))
           .addBooleanOption(option =>
             option
-              .setName('Blacklist')
+              .setName('blacklist')
               .setDescription('Flag to determine if you blacklist or unblacklist the User.')
               .setRequired(true)),
           

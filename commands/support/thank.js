@@ -7,7 +7,7 @@ module.exports = {
           .setDescription('Thank a user for helping you!')
           .addUserOption(option =>
             option
-              .setName('User')
+              .setName('user')
               .setDescription('User to thank!')
               .setRequired(true)),
 

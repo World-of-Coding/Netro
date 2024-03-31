@@ -7,12 +7,12 @@ module.exports = {
           .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
           .addUserOption(option =>
             option
-              .setName('User')
+              .setName('user')
               .setDescription('User to remove points from.')
               .setRequired(true))
           .addIntegerOption(option =>
             option
-              .setName('Points')
+              .setName('points')
               .setDescription('Amount of points to remove from User.')
               .setRequired(true)
               .setMinValue(1)),

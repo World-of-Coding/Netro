@@ -9,12 +9,12 @@ module.exports = {
             .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
             .addUserOption(option =>
                 option
-                    .setName('User')
+                    .setName('user')
                     .setDescription('User to open a modmail with.')
                     .setRequired(true))
             .addStringOption(option =>
                 option
-                    .setName('Message')
+                    .setName('message')
                     .setDescription('Initial message to send to the user.')
                     .setMinLength(1)
                     .setMaxLength(1024)

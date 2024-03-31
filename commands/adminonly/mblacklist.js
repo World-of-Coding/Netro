@@ -7,12 +7,12 @@ module.exports = {
           .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
           .addUserOption(option =>
             option
-              .setName('User')
+              .setName('user')
               .setDescription('User to blacklist from the market place.')
               .setRequired(true))
           .addStringOption(option =>
             option
-              .setName('Reason')
+              .setName('reason')
               .setDescription('The reason for blacklisting.')),
   
   /**

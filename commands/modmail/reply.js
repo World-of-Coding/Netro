@@ -8,17 +8,17 @@ module.exports = {
           .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
           .addStringOption(option =>
             option
-              .setName('Message')
+              .setName('message')
               .setDescription('Message to respond with.')
               .setRequired(true)
               .setMaxLength(1024))
           .addAttachmentOption(option =>
             option
-              .setName('Attachment')
+              .setName('attachment')
               .setDescription('Attachment to send with the response.'))
           .addBooleanOption(option =>
             option
-              .setName('Anonymous')
+              .setName('anonymous')
               .setDescription('Send the response anonymously or not.')),
 
   /**
