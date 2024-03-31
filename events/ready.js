@@ -10,16 +10,6 @@ module.exports = {
 		// prevent internals to perform actions on invalid data
 		await require('../utils/initialize_db')(client);
 
-		const bootupEmbed = new EmbedBuilder()
-			.setTitle("Startup complete")
-			.setColor('GREEN')
-			.setDescription(`Finished at ${new Date().toUTCString()}`)
-			.setTimestamp();
-
-		if (client.config.logging.botBootup.enable) {
-			const logChannel = client.channels.cache.get(client.config.logging.botBootup.channel);
-			await logChannel.send({ embeds: [bootupEmbed] });
-		};
 
 		console.log(`${client.user.tag} is up and ready to go!`);
 

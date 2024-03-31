@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const client = require("../../index.js");
+const client = require("../index.js");
 const { EmbedBuilder, Message, Client, Events } = require('discord.js');
 
 const target = client.config.target;

@@ -16,7 +16,6 @@ function loadCommands(client) {
     const commandFiles = fs.readdirSync(`./commands/${folder}`);
 
     for(const file of commandFiles) {
-      console.log(file)
       const commandFile = require(`../commands/${folder}/${file}`);
 
       client.commands.set(commandFile.data.name, commandFile);
