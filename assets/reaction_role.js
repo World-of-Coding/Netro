@@ -1,8 +1,8 @@
 const { EmbedBuilder } = require('discord.js');
 
-const { emojiCount } = require('../../utils/parsing.js');
-const { EMOJI_REGEX } = require('../../utils/regexes.js');
-const { isValidColor } = require('../../utils/misc.js');
+const { emojiCount } = require('../utils/parsing.js');
+const { EMOJI_REGEX } = require('../utils/regexes.js');
+const { isValidColor } = require('../utils/misc.js');
 module.exports = {
   name: 'reactionrole',
   aliases: ['rr'],

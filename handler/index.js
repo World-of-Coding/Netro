@@ -1,35 +1,31 @@
+const discord = require("discord.js");
+const ascii = require("ascii-table");
+const fs = require("fs");
+
+/**
+ * 
+ * @param {discord.Client} client 
+ */
 function loadCommands(client) {
-    const ascii = require("ascii-table");
-    const fs = require("fs");
-    const table = new ascii().setHeading("Commands", "Working");
+  const table = new ascii().setHeading("Commands", "Working");
   
-    let commandsArray = [];
-    let developerArray = [];
-  
-    const commandsFolder = fs.readdirSync("./commands");
-    for (const folder of commandsFolder) {
-      const commandFiles = fs
-        .readdirSync(`./commands/${folder}`)
-  
-          for (const file of commandFiles) {
-              const commandFile = require(`../commands/${folder}/${file}`)
-              client.commands.set(commandFile.data.name, commandFile)
-  
-              if(commandFile.developer) developerArray.push(commandFile.data.toJSON());
-              else commandsArray.push(commandFile.data.toJSON());
-  
-          table.addRow(file, "yes");
-          continue;
-          }
+  let commandsArray = [];
+
+  const commandsFolder = fs.readdirSync("./commands");
+  for(const folder of commandsFolder) {
+    const commandFiles = fs.readdirSync(`./commands/${folder}`);
+
+    for(const file of commandFiles) {
+      console.log(file)
+      const commandFile = require(`../commands/${folder}/${file}`);
+
+      client.commands.set(commandFile.data.name, commandFile);
+      table.addRow(file, "yes");
     }
-          client.application.commands.set(commandsArray);
-  
-          const Guild = client.guilds.cache.get(client.config.target.server)
-  
-          Guild.commands.set(developerArray);
-          
-          return console.log(table.toString(), "\nLoaded Commands")
   }
-  
-  
-  module.exports = { loadCommands }
+
+  client.application.commands.set(commandsArray);
+  return console.log(table.toString());
+}
+
+module.exports = {loadCommands}

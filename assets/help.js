@@ -5,12 +5,12 @@ const {
   readdirSync,
 } = require('fs');
 
-const _client = require('../../index.js');
+const _client = require('../index.js');
 const { prefix } = _client.config;
 const color = _client.config.misc.defaultEmbedColor;
 
 // the dropdown menu
-const create_mh = require('../../utils/menu.js');
+const create_mh = require('../utils/menu.js');
 module.exports = {
   name: 'help',
   aliases: ['h'],

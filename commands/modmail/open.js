@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, ChatInputCommandInteraction, Client, PermissionFlagsBits, EmbedBuilder } = require("discord.js");
+const client = require("../../index");
 
 const mmConfig = client.config.modmail;
 

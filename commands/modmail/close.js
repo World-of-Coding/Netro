@@ -9,8 +9,8 @@ module.exports = {
           .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
           .addBooleanOption(option =>
             option
-              .setName('Anonymous')
-              .description('Close the ticket anonymously or not.')),
+              .setName('anonymous')
+              .setDescription('Close the ticket anonymously or not.')),
 
   /**
    * @param {ChatInputCommandInteraction} interaction
